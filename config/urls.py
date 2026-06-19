@@ -15,22 +15,26 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-path(
-    'api/accounts/',
-    include('accounts.urls')
-),
+    path(
+        'api/accounts/',
+        include('accounts.urls')
+    ),
 
-path(
-    'api/tracker/',
-    include('tracker.urls')
-),
+    path(
+        'api/tracker/',
+        include('tracker.urls')
+    ),
+
+    # Serve index.html for all other routes to support React Router client-side routing
+    re_path(r'^(?!api/)(?!admin/)(?!media/)(?!static/).*$', TemplateView.as_view(template_name='index.html'), name='frontend'),
 ]
 
 
